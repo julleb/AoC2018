@@ -119,7 +119,12 @@ int sleepTimeForGuardsShift(std::vector<Shift> &shifts) {
 	return sum;
 }
 
-int findMostOccuredSleepingMinute(std::vector<Shift> shifts) {
+struct SleepingMinute {
+	int amount;
+	int minute;
+};
+
+SleepingMinute findMostOccuredSleepingMinute(std::vector<Shift> shifts) {
 	std::vector<int> minutes(60);
 	for (int i = 0; i < shifts.size(); ++i) {
 		std::vector<std::string> shiftLine = shifts[i].shiftLine;
@@ -155,11 +160,41 @@ int findMostOccuredSleepingMinute(std::vector<Shift> shifts) {
 			index = i;
 		}
 	}
-	return index;
+	SleepingMinute sleepingMinute;
+	sleepingMinute.minute = index;
+	sleepingMinute.amount = max;
+	return sleepingMinute;
 }
 
 
+
+
 std::map<std::string, std::vector<Shift>> guardShifts;
+
+
+void partTwo_findSleepiestGuard() {
+	int maxAmount = 0;
+	std::string guard;
+	int findMostMinute = 0;
+	auto it = guardShifts.begin();
+	while (it != guardShifts.end()) {
+		int sleepTimeForGuard = 0;
+		std::vector<Shift> shifts = it->second;
+		SleepingMinute sleepingMinute = findMostOccuredSleepingMinute(shifts);
+		if (sleepingMinute.amount > maxAmount) {
+			maxAmount = sleepingMinute.amount;
+			guard = it->first;
+			findMostMinute = sleepingMinute.minute;
+		}
+		it++;
+	}
+	std::cout << "SLEEPIEST GUARD" << std::endl;
+	std::cout << "Guard " << guard << std::endl;
+	std::cout << "Amount " << maxAmount << std::endl;
+	std::cout << "Minute most slept " << findMostMinute << std::endl;
+}
+
+
 
 int main() {
 
@@ -198,7 +233,7 @@ int main() {
 		if (time > maxSleepingTime) {
 			maxSleepingTime = time;
 			guard = it->first;
-			findMostMinute = findMostOccuredSleepingMinute(shifts);
+			findMostMinute = findMostOccuredSleepingMinute(shifts).minute;
 		}
 		it++;
 	}
@@ -207,6 +242,8 @@ int main() {
 	std::cout << "SleepingTime=" << maxSleepingTime << std::endl;
 	std::cout << "Minuted occured " << findMostMinute << std::endl;
 	
+
+	partTwo_findSleepiestGuard();
 	std::cout << "Done" << std::endl;
 
 	getchar();
