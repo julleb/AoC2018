@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 namespace Utils {
 	std::vector<std::string> ReadFile(const char *fileName) {
@@ -36,6 +37,15 @@ namespace Utils {
 		}
 		splittedString.push_back(s);
 		return splittedString;
+	}
+
+	std::string StringToUpperCase(std::string str) {
+		std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+		return str;
+	}
+	std::string StringToLowerCase(std::string str) {
+		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+		return str;
 	}
 }
 
